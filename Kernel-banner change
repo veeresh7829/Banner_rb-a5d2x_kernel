@@ -1,0 +1,50 @@
+Download the source file from the https://github.com/rugged-board/linux-rba5d2x
+				or
+Source code: https://github.com/rugged-board/linux-rba5d2x.git
+
+Enter to the Path of the file
+
+Enable toolChain
+. /opt/poky-tiny/2.5.2/environment-setup-cortexa5hf-neon-poky-linux-musleabi 
+ 
+$cd init
+$vi version.c
+ 
+Change the banner name as you Required
+ 
+$make distclean
+$make rb_a5d2x_defconfig
+$make dtbs
+$make
+ 
+=> zImage present in /arch/arm/boot/  copy into  BOOT dir of SD Card for SD Card Flash and for NOR Flash copy into /var/lib/tftpboot/ and then copy to NOR flash 
+
+=> a5d2x_rugged_board.dtb present in /arch/arm/boot/dts/  copy into  BOOT dir of SD Card for SD Card Flash and for NOR Flash copy into /var/lib/tftpboot/ and then copy to NOR flash 
+
+Goto Minicom 
+sudo minicom -s
+ttyUSB0, 115200 baudrate for rugged-board
+
+Set the environmental variables
+
+setenv ipaddr 192.168.1.20    	 board address
+setenv serverip 192.168.1.247 	 pc address
+ping 192.168.1.247           		 pc address
+saveenv
+
+Give the commands for  the zimage and offtree commands and boot the board
+
+follow this below link for commands, Flash a nor using tftp rugged-board_a5d2x
+https://developer.ruggedboard.com/
+
+sf probe
+tftp 0x21F70000 a5d2x-rugged_board.dtb
+sf erase 0xA0000 0x10000
+sf write 0x21F70000 0xA0000 0x10000
+
+sf probe
+tftp 0x21F60000 zImage
+sf erase 0xB0000 0x500000
+sf write 0x21F60000 0xB0000 0x500000
+
+boot
